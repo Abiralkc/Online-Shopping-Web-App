@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MorningBroadway1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tblCatagory">
+    <Key>
+      <PropertyRef Name="CatagoryId" />
+    </Key>
+    <Property Name="CatagoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CatagoryName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblProducts" Relationship="Self.FK_tblProduct_tblCatagory" FromRole="tblCatagory" ToRole="tblProduct" />
+  </EntityType>
+  <EntityType Name="tblProduct">
+    <Key>
+      <PropertyRef Name="ProductId" />
+    </Key>
+    <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CatagoryId" Type="Int32" />
+    <Property Name="ProductName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="Units" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="SellingPrice" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Photo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsSpecial" Type="Boolean" />
+    <NavigationProperty Name="tblCatagory" Relationship="Self.FK_tblProduct_tblCatagory" FromRole="tblProduct" ToRole="tblCatagory" />
+  </EntityType>
+  <EntityType Name="tblRole">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblUserRoles" Relationship="Self.FK_tblUserRole_tblRole" FromRole="tblRole" ToRole="tblUserRole" />
+  </EntityType>
+  <EntityType Name="tblUserRole">
+    <Key>
+      <PropertyRef Name="UserRoleId" />
+    </Key>
+    <Property Name="UserRoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="RoleId" Type="Int32" />
+    <NavigationProperty Name="tblRole" Relationship="Self.FK_tblUserRole_tblRole" FromRole="tblUserRole" ToRole="tblRole" />
+    <NavigationProperty Name="tblUser" Relationship="Self.FK_tblUserRole_tblUsers" FromRole="tblUserRole" ToRole="tblUsers" />
+  </EntityType>
+  <EntityType Name="tblUser">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="UserType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="tblUserRoles" Relationship="Self.FK_tblUserRole_tblUsers" FromRole="tblUsers" ToRole="tblUserRole" />
+  </EntityType>
+  <Association Name="FK_tblProduct_tblCatagory">
+    <End Role="tblCatagory" Type="Self.tblCatagory" Multiplicity="0..1" />
+    <End Role="tblProduct" Type="Self.tblProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblCatagory">
+        <PropertyRef Name="CatagoryId" />
+      </Principal>
+      <Dependent Role="tblProduct">
+        <PropertyRef Name="CatagoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUserRole_tblRole">
+    <End Role="tblRole" Type="Self.tblRole" Multiplicity="0..1" />
+    <End Role="tblUserRole" Type="Self.tblUserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblRole">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="tblUserRole">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblUserRole_tblUsers">
+    <End Role="tblUsers" Type="Self.tblUser" Multiplicity="0..1" />
+    <End Role="tblUserRole" Type="Self.tblUserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUsers">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="tblUserRole">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MorningBroadway1Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tblCatagories" EntityType="Self.tblCatagory" />
+    <EntitySet Name="tblProducts" EntityType="Self.tblProduct" />
+    <EntitySet Name="tblRoles" EntityType="Self.tblRole" />
+    <EntitySet Name="tblUserRoles" EntityType="Self.tblUserRole" />
+    <EntitySet Name="tblUsers" EntityType="Self.tblUser" />
+    <AssociationSet Name="FK_tblProduct_tblCatagory" Association="Self.FK_tblProduct_tblCatagory">
+      <End Role="tblCatagory" EntitySet="tblCatagories" />
+      <End Role="tblProduct" EntitySet="tblProducts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUserRole_tblRole" Association="Self.FK_tblUserRole_tblRole">
+      <End Role="tblRole" EntitySet="tblRoles" />
+      <End Role="tblUserRole" EntitySet="tblUserRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblUserRole_tblUsers" Association="Self.FK_tblUserRole_tblUsers">
+      <End Role="tblUsers" EntitySet="tblUsers" />
+      <End Role="tblUserRole" EntitySet="tblUserRoles" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
